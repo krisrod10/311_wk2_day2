@@ -42,7 +42,7 @@ app.get("/items", function(req,res){
      //write the code that will convert item(with all details),
      // to a simpler copy(with just the id,label and done)   
 });
-// use this when testing if ytou have not figured out how to conver to a simplfied list of items
+// use this when testing if you have not figured out how to conver to a simplfied list of items
 //res.json(db)
 
 res.json(simplifiedDB);
@@ -59,7 +59,9 @@ app.get("/items/id:", function(req,res){
 
     // loop through the db array and find the correct item
     // and return it
-
+     for(let i = 0; i<theID.length; i++){
+         theID.length.find("items/:id");
+     }
     // you can use a higher order function find() function(ie>find())
 
     let found = null; //find this in
@@ -110,6 +112,15 @@ app.post("/items", function(req,res){
 app.put("items/:id", function(req,res){
     console.log("PUT /items/:id", req.params, req.body);
     // your code here
+let items = getItemsById(req.body.todo.id);
+if(items){
+    editItems(req.body.id, req.body.todo);
+    res.send('Ok');
+} else{
+    res.status(400).send("record not found");
+}
+
+
 })
 
 //DELETE /items/:id
@@ -117,6 +128,13 @@ app.put("items/:id", function(req,res){
 app.delete("/items/:id", function(req,res){
     console.log("DELETE /items/:id", req.params)
     // your code here
+    let { id } = req.params;
+
+    let index = items.findIndex(p => p.id == id);
+
+    items.splice(index, 1);
+
+    return res.send();
 })
 
 //start the application server
