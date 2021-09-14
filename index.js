@@ -40,7 +40,12 @@ app.get("/items", function(req,res){
     //use .map() higher order function
     let simplifiedDB = db.map(function(req, res){
      //write the code that will convert item(with all details),
-     // to a simpler copy(with just the id,label and done)   
+     // to a simpler copy(with just the id,label and done)  
+     const newcopy = req.body;
+     if(newcopy === db){
+         return db.body;
+     }
+    res.json(newcopy);
 });
 // use this when testing if you have not figured out how to conver to a simplfied list of items
 //res.json(db)
@@ -59,12 +64,15 @@ app.get("/items/id:", function(req,res){
 
     // loop through the db array and find the correct item
     // and return it
-     for(let i = 0; i<theID.length; i++){
-         theID.length.find("items/:id");
-     }
+// res.json(db.find(db => db.id === parseInt(req.params.id)));
     // you can use a higher order function find() function(ie>find())
 
-    let found = null; //find this in
+    let found = db.some(db => db.id.item === parseInt(req.params.id.item)); //find this in
+    if(found){
+        res.json(db.find(db => db.id.item === parseInt(req.params.id.item)));
+} else{
+res.status(400).json("member not found");
+}
     res.json(found);
 
 })
@@ -112,14 +120,20 @@ app.post("/items", function(req,res){
 app.put("items/:id", function(req,res){
     console.log("PUT /items/:id", req.params, req.body);
     // your code here
-let items = getItemsById(req.body.todo.id);
-if(items){
-    editItems(req.body.id, req.body.todo);
-    res.send('Ok');
-} else{
-    res.status(400).send("record not found");
-}
+const found = db.some(db => db.id === parseInt(req.params.id));
+if(found){
+    const updateId = req.body;
+    db.forEach(db => {
+        if(db.id === parseInt(req.params.id)){
+            db.name = updateId.id ? updateId.label : db.done;
+            db.label = updateId.id ? updateId.label : db.done;
 
+            res.json("db updated", db);
+        }
+    })
+} else{
+    res.status(400).json('member with the id')
+}
 
 })
 
@@ -128,13 +142,13 @@ if(items){
 app.delete("/items/:id", function(req,res){
     console.log("DELETE /items/:id", req.params)
     // your code here
-    let { id } = req.params;
+    const found = db.some(db => db.id === parseInt(req.params.id.items));
 
-    let index = items.findIndex(p => p.id == id);
-
-    items.splice(index, 1);
-
-    return res.send();
+    if(found){
+res.json({ msg: 'id deleted', db: db.filter(db => db.id !== parseInt(req.params.id))});
+    } else{
+        res.status(400).json('no id with that label');
+    }
 })
 
 //start the application server
